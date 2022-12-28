@@ -104,7 +104,7 @@ Once the containers start running, you can access the services on the following 
 - ```"http://localhost:5050/browser/``` : this is the interface of `pgAdmin` with postgres already configured
 - ```http://localhost:9091/graphiql```: this is the GraphQL playground. I have included [some sample snippets](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/query_snippets) so that you could easily start issuing request once the services are up.
 
-At this point when the test database is already running, you can run the prepared tests. Just go the main project direct as in step 2 and execute the following command
+At this point when the test database is already running, you can run the prepared tests. Open another terminal window (if you executed the `docker-compose up -d` without the `-d` option), then go to the main project direct as in step 2 and execute the following command
 
 ```$ ./mvnw test```
 
