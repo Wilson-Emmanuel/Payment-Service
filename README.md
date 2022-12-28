@@ -12,7 +12,7 @@ This is a GraphQL web API that models a simple payment service with lots of feat
 
 ## Functions
 - Add Payment methods : 12 payment methods from the problem statement document will be loaded into the DB on application startup
-- Update payment methods. [You can see all auto-loaded data on this link](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/src/main/java/com/anymind/paymentservice/PaymentServiceApplication.java).
+- Update payment methods. You can see all auto-loaded data on the Java code snippet below.
 - Query payment methods
 - Make payments
 - Query payments by date range
