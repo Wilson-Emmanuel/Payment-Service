@@ -1,6 +1,7 @@
 HELP.md
+Note.txt
 target/
-!.mvn/wrapper/maven-wrapper.jar
+!.mvn2/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
