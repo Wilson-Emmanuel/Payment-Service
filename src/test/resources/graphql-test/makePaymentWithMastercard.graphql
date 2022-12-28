@@ -1,0 +1,26 @@
+mutation {
+    makePayment(newPayment: {
+        customerId: "12345"
+        price: "800.00"
+        priceModifier: 0.95
+        paymentMethod: "MASTERCARD"
+        datetime: "2022-12-28T00:00:00Z",
+        additionalItem: {
+            last4: "1234"
+        }
+    }){
+        finalPrice
+        priceModifier
+        points
+        pointModifier
+        datetime
+        paymentMethod
+        customer{
+            userId
+            firstName
+            lastName
+            email
+        }
+        additionalItem
+    }
+}

@@ -1,0 +1,9 @@
+query {
+    getPaymentMethods {
+        name,
+        minPriceModifier,
+        maxPriceModifier,
+        pointModifier,
+        requiresAdditionalItem
+    }
+}

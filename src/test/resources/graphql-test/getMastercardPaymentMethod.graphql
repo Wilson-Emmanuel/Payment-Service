@@ -1,0 +1,9 @@
+ query{
+   getPaymentMethod(methodName: "MASTERCARD"){
+     name
+         minPriceModifier
+         maxPriceModifier
+         pointModifier
+         requiresAdditionalItem
+   }
+ }

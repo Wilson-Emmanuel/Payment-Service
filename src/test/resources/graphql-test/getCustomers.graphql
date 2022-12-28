@@ -1,0 +1,14 @@
+# QUERY CUSTOMERS
+ query{
+   getCustomers(page: 0, pageSize: 1){
+     currentPage
+     pageSize
+     totalPages
+     users{
+       userId
+       firstName
+       lastName
+       email
+     }
+   }
+ }

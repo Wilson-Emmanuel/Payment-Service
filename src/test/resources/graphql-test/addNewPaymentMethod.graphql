@@ -1,0 +1,15 @@
+ mutation{
+     createPaymentMethod(newPaymentMethod: {
+         name: "UnionPay"
+         minPriceModifier: 0.95
+         maxPriceModifier: 1
+         pointModifier: 0.05
+       	requiresAdditionalItem:true
+     }){
+         name
+         minPriceModifier
+         maxPriceModifier
+         pointModifier
+         requiresAdditionalItem
+     }
+ }

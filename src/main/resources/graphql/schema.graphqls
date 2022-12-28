@@ -1,0 +1,76 @@
+scalar Object
+
+type Mutation {
+    makePayment(newPayment: PaymentInput!): Payment
+    createPaymentMethod(newPaymentMethod: PaymentMethodInput): PaymentMethod
+    updatePaymentMethod(methodName: String!, updatedPaymentMethod: PaymentMethodInput): PaymentMethod
+    createUser(newUser: UserInput): User
+}
+type Query {
+    getPayments(startDateTime: String!, endDateTime: String!): [Payment!]
+    getPaymentMethods: [PaymentMethod!]
+    getPaymentMethod(methodName: String!): PaymentMethod
+    getCustomers(page: Int = 0, pageSize : Int = 20):UsersPage!
+    getCustomerById(customerId: String!): User
+}
+
+##############################
+## INPUTs
+input PaymentInput {
+    customerId: String!
+    price: String!
+    priceModifier: Float!
+    paymentMethod: String!
+    datetime: String!
+    additionalItem: Object
+}
+input PaymentMethodInput {
+    name: String!
+    minPriceModifier: Float!
+    maxPriceModifier: Float!
+    pointModifier: Float!
+    requiresAdditionalItem: Boolean
+}
+input UserInput {
+    userId: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+    role: UserRole
+}
+#####################################
+## TYPES
+type Payment {
+    customer: User!
+    priceModifier: Float!
+    price: String!
+    finalPrice: String!
+    points: Int!
+    pointModifier: Float!
+    paymentMethod: String!
+    datetime: String!
+    additionalItem: Object
+}
+type PaymentMethod {
+    name: String!
+    minPriceModifier: Float!
+    maxPriceModifier: Float!
+    pointModifier: Float!
+    requiresAdditionalItem: Boolean
+}
+
+type User {
+    userId: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+}
+type UsersPage {
+    currentPage: Int!
+    pageSize: Int!
+    totalPages: Int!
+    users: [User!]
+}
+enum UserRole {
+    CUSTOMER,ADMIN
+}

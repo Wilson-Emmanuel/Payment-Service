@@ -1,0 +1,19 @@
+# Don't forget to change dates
+query{
+   getPayments(startDateTime:"2022-01-25T00:00:00Z", endDateTime: "2024-12-28T20:00:00Z")
+   {
+     finalPrice
+     priceModifier
+     points
+     pointModifier
+     datetime
+     paymentMethod
+     customer{
+       userId
+       firstName
+       lastName
+       email
+     }
+     additionalItem
+   }
+ }
