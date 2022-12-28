@@ -41,7 +41,7 @@ This is a GraphQL web API that models a simple payment service with lots of feat
 
 		paymentMethodInputs.forEach((methodInput)->paymentMethodService.createPaymentMethod(methodInput));
 
- // NOTE: please use this user ID "12345" or "12346" while making payment request. Or you can create a new users with different customer ID.
+ // NOTE: please use these customer IDs ("12345" or "12346") while sending "makePayment" requests. Or you can create a new users with different customer ID.
 		List<UserInput> users = List.of(
 				new UserInput("12345","Wilson","Emmanuel","wilson@gmail.com","CUSTOMER"),
 				new UserInput("12346","Anyx","Admin","admin@anyx.com","ADMIN")
