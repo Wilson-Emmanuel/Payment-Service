@@ -10,6 +10,49 @@ This is a GraphQL web API that models a simple payment service with lots of feat
 - Docker-compose : A simple container orchestration tool for defining and running multi-container docker applications.
 - pgAdmin : A web-based management tool for Postgres DB.
 
+## Functions
+- Add Payment methods : 12 payment methods from the problem statement document will be loaded into the DB on application startup
+- Update payment methods. [You can see all auto-loaded data on this link](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/src/main/java/com/anymind/paymentservice/PaymentServiceApplication.java).
+- Query payment methods
+- Make payments
+- Query payments by date range
+- Add customers/users
+- Query customers: 2 users are created on application startup. Please use the customer ids while making payment requests. Below is the Java code that shows how data are loaded on application startup.
+
+```java
+@PostConstruct
+	public void autoloader(){
+    
+    //NOTE: only payment methods here are acceptable for payments. You can add more payment methods.
+		List<PaymentMethodInput> paymentMethodInputs = List.of(
+				new PaymentMethodInput("CASH",new BigDecimal("0.9"),new BigDecimal("1"),new BigDecimal("0.05"), false),
+				new PaymentMethodInput("CASH_ON_DELIVERY",new BigDecimal("1"),new BigDecimal("1.2"),new BigDecimal("0.05"), true),
+				new PaymentMethodInput("VISA",new BigDecimal("0.95"),new BigDecimal("1"),new BigDecimal("0.03"), true),
+				new PaymentMethodInput("MASTERCARD",new BigDecimal("0.95"),new BigDecimal("1"),new BigDecimal("0.03"), true),
+				new PaymentMethodInput("AMEX",new BigDecimal("0.98"),new BigDecimal("1.01"),new BigDecimal("0.02"), true),
+				new PaymentMethodInput("JCB",new BigDecimal("0.95"),new BigDecimal("1"),new BigDecimal("0.05"), true),
+				new PaymentMethodInput("LINE PAY",new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("0.01"), false),
+				new PaymentMethodInput("PAYPAY",new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("0.01"), false),
+				new PaymentMethodInput("POINTS",new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("0"), false),
+				new PaymentMethodInput("GRAB PAY",new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("0.01"), false),
+				new PaymentMethodInput("BANK TRANSFER",new BigDecimal("1"),new BigDecimal("1"),new BigDecimal("0"), true),
+				new PaymentMethodInput("CHEQUE",new BigDecimal("0.9"),new BigDecimal("1"),new BigDecimal("0"), true)
+		);
+
+		paymentMethodInputs.forEach((methodInput)->paymentMethodService.createPaymentMethod(methodInput));
+
+ // NOTE: please use this user ID "12345" or "12346" while making payment request. Or you can create a new users with different customer ID.
+		List<UserInput> users = List.of(
+				new UserInput("12345","Wilson","Emmanuel","wilson@gmail.com","CUSTOMER"),
+				new UserInput("12346","Anyx","Admin","admin@anyx.com","ADMIN")
+		);
+		users.forEach(user -> userService.createUser(user));
+	}
+
+```
+
+NB: Some changes are made to the request formats included in the problem statement document. Please use the [sample snippets](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/query_snippets) or the [GraphQL schema](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/src/main/resources/graphql/schema.graphqls) as a guide to formulating error-free queries. I would be grateful to explain my reasons for these changes in our next discussion possibly.
+
 ## Features
 - INPUT VALIDATION: GraphQL uses the defined schema to validate supplied input. Also, additional layer of validation was added using `Hibernate Validator` library. This is to ensure that all supplied input are validated before any further processing or storage.
 - DATA STORAGE AND RETRIEVAL: using postgres db
