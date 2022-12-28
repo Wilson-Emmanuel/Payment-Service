@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "pgadmin4@pgadmin.org",
+      "Group": "Servers",
+      "Host": "payment_db",
+      "Port": 5432,
+      "MaintenanceDB": "anyx_db",
+      "Username": "anyx_user",
+      "PassFile": "/pgpass",
+      "Comment": "Web based admin page for the payment service's postgres database.",
+      "SSLMode": "prefer"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  payment:
+    image: 'payment-service-img:latest'
+    build:
+      context: .
+    container_name: payment
+    depends_on:
+      - payment_db
+      - test_db
+    ports:
+      - "9091:9091"
+    networks:
+      - backend
+  pgadmin:
+    container_name: postgres_ui
+    image: "dpage/pgadmin4:5.1"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin@anyx.com
+      - PGADMIN_DEFAULT_PASSWORD=anyx
+    volumes:
+      - ./pgadmin_config_files/pgadmin_server.json:/pgadmin4/servers.json
+      - ./pgadmin_config_files/pgadmin_password_file:/pgadmin_password_file
+    depends_on:
+      - payment_db
+    ports:
+      - "5050:80"
+    networks:
+      - backend
+  payment_db:
+    container_name: payment_db
+    image: "postgres:13.1-alpine"
+    environment:
+      - POSTGRES_USER=anyx_user
+      - POSTGRES_PASSWORD=anyx_pass
+      - POSTGRES_DB=anyx_db
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+      - ./initDB_for_docker:/docker-entrypoint-initdb.d/:ro
+  test_db:
+    image: "postgres:13.1-alpine"
+    environment:
+      - POSTGRES_USER=anyx_user_test
+      - POSTGRES_PASSWORD=anyx_pass_test
+      - POSTGRES_DB=test_db
+    ports:
+      - "5435:5432"
+volumes:
+  db_data:
+networks:
+  backend:
+    driver: bridge
