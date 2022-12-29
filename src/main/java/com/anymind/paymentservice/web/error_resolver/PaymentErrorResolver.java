@@ -6,6 +6,7 @@ import com.anymind.paymentservice.web.exceptions.ResourceNotFoundException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 
-import javax.xml.crypto.Data;
 import java.util.stream.Collectors;
 
 /**
@@ -47,16 +47,15 @@ public class PaymentErrorResolver extends DataFetcherExceptionResolverAdapter {
                     .build();
         }
 
-        t.printStackTrace();
         return GraphqlErrorBuilder.newError(env)
-                .message("Error occurred: Ensure request is valid "+ t.getClass().getName())
+                .message("Error occurred: Ensure request is valid ")
                 .errorType(ErrorTypes.BAD_REQUEST)
                 .build();
     }
 
     private GraphQLError validationError(ConstraintViolationException exception, DataFetchingEnvironment env){
         String invalidFields = exception.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath().toString()+": "+violation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining("\n"));
 
         return GraphqlErrorBuilder.newError(env)
