@@ -124,7 +124,8 @@ At this point when the test database is already running, you can run the prepare
 
 ```$ ./mvnw test```
 
-PS: Use the following command to remove all docker resources if you want to start all over.
+### Restarting or Cleaning up
+Use the following command to remove all docker resources if you want to start all over. Execute the command inside the docker folder.
 
 ```$ docker-compose down --rmi all -v```
 
