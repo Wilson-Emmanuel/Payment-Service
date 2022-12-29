@@ -72,7 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         //Ensure additional Item is valid if available
         boolean requiresAdditionalItem = paymentMethod.isRequiresAdditionalItem();
-        if(requiresAdditionalItem && (input.getAdditionalItem() == null || input.getAdditionalItem().isEmpty())){
+        if(requiresAdditionalItem && (input.getAdditionalItem() == null)){
             throw new BusinessLogicException("Payment method requires additional item");
         }
 

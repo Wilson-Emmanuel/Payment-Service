@@ -50,5 +50,5 @@ public class PaymentEntity extends AbstractBaseEntity<Long>{
 
     @Type(JsonBinaryType.class)
     @Column(name = "additional_item", columnDefinition = "json")
-    private Map<String, String> additionalItem = new HashMap<>();
+    private Object additionalItem = new HashMap<>();
 }

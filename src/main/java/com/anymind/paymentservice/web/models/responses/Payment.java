@@ -25,6 +25,6 @@ public class Payment {
     private BigDecimal pointModifier;
     private String paymentMethod;
     private String datetime;
-    private Map<String,String> additionalItem; //meta data
+    private Object additionalItem; //meta data
 
 }

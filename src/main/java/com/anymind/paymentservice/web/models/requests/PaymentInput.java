@@ -35,5 +35,5 @@ public class PaymentInput {
     @NotBlank(message = "datetime cannot be empty")
     private String datetime;
 
-    private Map<String,String> additionalItem;
+    private Object additionalItem;
 }
