@@ -101,13 +101,25 @@ Note: It is very necessary to include the `-DskipTests` in the command above sin
 
 Once the containers start running, you can access the services on the following locations
 - ```http://localhost:9091/graphql``` : this is the single endpoint that GraphQL uses for all its requests. Use it incase you want to use external client services/tools like `Postman` to connect to the running payment service.
-- ```"http://localhost:5050/browser/``` : this is the interface of `pgAdmin` with postgres already configured. Below are credentials for accessing `pgAdmin`
+- ```"http://localhost:5050/browser/``` : this is the interface of `pgAdmin` with postgres already configured. Below are credentials for accessing `pgAdmin` and `Postgres`
 
-`Username: pgadmin@anyx.com`
 
-`Password: anyx`
+
+```
+1. pgAdmin Credentials
+Username: pgadmin@anyx.com
+Password: anyx 
+
+2. Postgres DB Credentials
+Username: anyx_user
+Password: anyx_pass
+Database name: anyx_db
+```
+
+
 - ```http://localhost:9091/graphiql```: this is the GraphQL playground. I have included [some sample snippets](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/query_snippets) so that you could easily start issuing request once the services are up.
 
+### Testing
 At this point when the test database is already running, you can run the prepared tests. Open another terminal window (if you executed the `docker-compose up -d` without the `-d` option), then go to the main project direct as in step 2 and execute the following command
 
 ```$ ./mvnw test```
