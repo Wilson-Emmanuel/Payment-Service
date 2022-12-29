@@ -1,10 +1,6 @@
 package com.anymind.paymentservice;
 
-import com.anymind.paymentservice.web.models.requests.PaymentInput;
-import com.anymind.paymentservice.web.models.requests.PaymentMethodInput;
-import com.anymind.paymentservice.web.models.responses.Payment;
 import com.anymind.paymentservice.web.models.responses.PaymentMethod;
-import com.anymind.paymentservice.web.models.responses.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,8 +12,6 @@ import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

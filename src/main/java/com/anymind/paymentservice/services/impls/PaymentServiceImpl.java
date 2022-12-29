@@ -7,11 +7,14 @@ import com.anymind.paymentservice.persistence.repositories.PaymentMethodReposito
 import com.anymind.paymentservice.persistence.repositories.PaymentRepository;
 import com.anymind.paymentservice.persistence.repositories.UserRepository;
 import com.anymind.paymentservice.services.PaymentService;
-import com.anymind.paymentservice.services.UserService;
 import com.anymind.paymentservice.web.exceptions.BusinessLogicException;
 import com.anymind.paymentservice.web.exceptions.ResourceNotFoundException;
 import com.anymind.paymentservice.web.models.requests.PaymentInput;
+import com.anymind.paymentservice.web.models.responses.PagedData;
 import com.anymind.paymentservice.web.models.responses.Payment;
+import com.anymind.paymentservice.web.models.responses.PaymentMethod;
+import com.anymind.paymentservice.web.models.responses.User;
+import graphql.schema.SelectedField;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +26,7 @@ import java.math.RoundingMode;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +41,10 @@ public class PaymentServiceImpl implements PaymentService {
     PaymentRepository paymentRepository;
     PaymentMethodRepository paymentMethodRepository;
     UserRepository userRepository;
-    UserService userService;
     @Override
-    public Payment makePayment(PaymentInput input) {
+    public Map<String, Object> makePayment(PaymentInput input, List<SelectedField> selectedFields) {
         //Ensure customer exist
-        UserEntity customer = userRepository.findByExternalId(input.getCustomerId())
+        UserEntity customer = userRepository.findByCustomerId(input.getCustomerId())
                 .orElseThrow(()->new ResourceNotFoundException("Customer does not exist"));
 
         //Ensure payment method exist
@@ -89,11 +92,18 @@ public class PaymentServiceImpl implements PaymentService {
                 .pointModifier(paymentMethod.getPointModifier())
                 .points(points)
                 .additionalItem(input.getAdditionalItem())
-                .paymentDate(paymentDate)
+                .datetime(paymentDate)
                 .build();
-        return this.fromEntity(paymentRepository.save(paymentEntity));
+        paymentRepository.save(paymentEntity);
+        return paymentRepository.getPaymentById(paymentEntity.getId(), selectedFields);
     }
 
+    /**
+     * Implemented using JPA projection to fetch data
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
     public List<Payment> getPayments(String startDate, String endDate) {
         Instant startDateTime = null, endDateTime = null;
@@ -107,23 +117,51 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BusinessLogicException("End date cannot be earlier than start date");
         }
 
-        return paymentRepository.findAllByPaymentDateBetweenOrderByPaymentDate(startDateTime, endDateTime)
+        return paymentRepository.findAllByDatetimeBetweenOrderByDatetime(startDateTime, endDateTime)
                 .stream()
-                .map(this::fromEntity)
+                .map(paymentProjection -> Payment.builder()
+                        .finalPrice(paymentProjection.getFinalPrice())
+                        .price(paymentProjection.getPrice())
+                        .pointModifier(paymentProjection.getPointModifier())
+                        .points(paymentProjection.getPoints())
+                        .paymentMethod(
+                                PaymentMethod.builder()
+                                        .name(paymentProjection.getPaymentMethod().getName())
+                                        .build()
+
+                        )
+                        .datetime(paymentProjection.getDatetime().toString())
+                        .priceModifier(paymentProjection.getPriceModifier())
+                        .additionalItem(paymentProjection.getAdditionalItem())
+                        .customer(
+                                User.builder()
+                                        .customerId(paymentProjection.getCustomer().getCustomerId())
+                                        .firstName(paymentProjection.getCustomer().getFirstName())
+                                        .lastName(paymentProjection.getCustomer().getLastName())
+                                        .email(paymentProjection.getCustomer().getEmail())
+                                        .build()
+                        ).build())
                 .collect(Collectors.toList());
     }
 
-    private Payment fromEntity(PaymentEntity entity){
-        return Payment.builder()
-                .customer(userService.getUserByUserId(entity.getCustomer().getId()))
-                .price(entity.getPrice())
-                .finalPrice(entity.getFinalPrice().toPlainString())
-                .priceModifier(entity.getPriceModifier())
-                .points(entity.getPoints())
-                .pointModifier(entity.getPointModifier())
-                .datetime(entity.getPaymentDate().toString())
-                .paymentMethod(entity.getPaymentMethod().getName())
-                .additionalItem(entity.getAdditionalItem())
-                .build();
+    @Override
+    public List<Map<String,Object>> getPayments(String startDate, String endDate, List<SelectedField> selectedFields) {
+        Instant startDateTime = null, endDateTime = null;
+        try{
+            startDateTime = Instant.parse(startDate);
+            endDateTime = Instant.parse(endDate);
+        }catch (Exception ignored){}
+
+        if(ObjectUtils.isEmpty(startDateTime) || ObjectUtils.isEmpty(endDateTime) ||
+                endDateTime.isBefore(startDateTime)){
+            throw new BusinessLogicException("End date cannot be earlier than start date");
+        }
+        return paymentRepository.getPaymentsNewImpl(startDateTime,endDateTime, selectedFields);
     }
+
+    @Override
+    public PagedData getPagedPayments(int page, int size, List<SelectedField> selectedFields) {
+        return paymentRepository.getPagedPayments(page, size, selectedFields);
+    }
+
 }

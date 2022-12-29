@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Created by Wilson
@@ -23,7 +22,7 @@ public class Payment {
     private String price;
     private int points;
     private BigDecimal pointModifier;
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
     private String datetime;
     private Object additionalItem; //meta data
 

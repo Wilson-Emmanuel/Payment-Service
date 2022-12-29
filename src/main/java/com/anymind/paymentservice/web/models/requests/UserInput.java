@@ -1,6 +1,5 @@
 package com.anymind.paymentservice.web.models.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserInput {
 
     @NotBlank(message = "customer id cannot be blank")
-    private String userId;
+    private String customerId;
 
     @NotBlank(message = "customer first name cannot be blank")
     private String firstName;

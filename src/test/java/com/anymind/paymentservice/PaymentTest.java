@@ -1,9 +1,7 @@
 package com.anymind.paymentservice;
 
-import com.anymind.paymentservice.web.models.requests.PaymentInput;
 import com.anymind.paymentservice.web.models.responses.Payment;
 import com.anymind.paymentservice.web.models.responses.PaymentMethod;
-import com.anymind.paymentservice.web.models.responses.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,7 +14,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -78,7 +75,7 @@ public class PaymentTest {
         //Confirm that size increased by 1
         //All confirm that the returned payment is indeed what was sent
         assertEquals(sizeAfterMakingPayment, sizeBeforeMakingPayment+1);
-        assertEquals(masterCard.getName(), paymentResponse.getPaymentMethod());
+        assertEquals(masterCard.getName(), paymentResponse.getPaymentMethod().getName());
 
 
         //confirm the final price and points are well calculated

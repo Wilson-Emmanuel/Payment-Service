@@ -8,7 +8,6 @@ import org.hibernate.annotations.Type;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Wilson
@@ -23,7 +22,8 @@ import java.util.Map;
 @Table(name = "payments")
 public class PaymentEntity extends AbstractBaseEntity<Long>{
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private UserEntity customer;
 
     @Column(name = "final_price", scale = 2, nullable = false, columnDefinition = "Decimal(20,2)")
@@ -42,10 +42,11 @@ public class PaymentEntity extends AbstractBaseEntity<Long>{
     @Column(name = "point_modifier", columnDefinition = "Decimal(20,10)")
     private BigDecimal pointModifier;
 
-    @Column(name = "payment_date", nullable = false)
-    private Instant paymentDate;
+    @Column(name = "datetime", nullable = false)
+    private Instant datetime;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "payment_method", referencedColumnName = "name")
     private PaymentMethodEntity paymentMethod;
 
     @Type(JsonBinaryType.class)

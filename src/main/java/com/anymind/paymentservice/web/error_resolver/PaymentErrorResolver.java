@@ -47,6 +47,7 @@ public class PaymentErrorResolver extends DataFetcherExceptionResolverAdapter {
                     .build();
         }
 
+        t.printStackTrace();
         return GraphqlErrorBuilder.newError(env)
                 .message("Error occurred: Ensure request is valid ")
                 .errorType(ErrorTypes.BAD_REQUEST)

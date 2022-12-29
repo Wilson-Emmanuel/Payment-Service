@@ -7,18 +7,16 @@ import com.anymind.paymentservice.web.exceptions.ResourceAlreadyExistException;
 import com.anymind.paymentservice.web.exceptions.ResourceNotFoundException;
 import com.anymind.paymentservice.web.models.enums.UserRole;
 import com.anymind.paymentservice.web.models.requests.UserInput;
+import com.anymind.paymentservice.web.models.responses.PagedData;
 import com.anymind.paymentservice.web.models.responses.User;
-import com.anymind.paymentservice.web.models.responses.UsersPage;
+import graphql.schema.SelectedField;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Wilson
@@ -32,11 +30,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserInput userInput) {
-        if(userRepository.hasUserByExternalIdOrEmail(userInput.getUserId(), userInput.getEmail())){
+        if(userRepository.hasUserByCustomerIdOrEmail(userInput.getCustomerId(), userInput.getEmail())){
             throw new ResourceAlreadyExistException("User already exists");
         }
         UserEntity userEntity = UserEntity.builder()
-                .externalId(userInput.getUserId())
+                .customerId(userInput.getCustomerId())
                 .firstName(userInput.getFirstName())
                 .lastName(userInput.getLastName())
                 .email(userInput.getEmail())
@@ -46,9 +44,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByExternalId(String externalId) {
-        UserEntity userEntity = userRepository.findByExternalId(externalId).orElseThrow(()-> new ResourceNotFoundException("User does not exists"));
-        return fromEntity(userEntity);
+    public Map<String, Object> getUserByCustomerId(String customerId, List<SelectedField> selectedFields) {
+        return userRepository.getUserCustomerId(customerId, selectedFields);
     }
 
     @Override
@@ -58,28 +55,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User email does not exists"));
-        return fromEntity(userEntity);
+    public Map<String, Object> getUserByEmail(String email, List<SelectedField> selectedFields) {
+        return userRepository.getUserByEmail(email, selectedFields);
     }
 
     @Override
-    public UsersPage getCustomers(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
-        Page<UserEntity> userEntities = userRepository.findAllByRole(UserRole.CUSTOMER, pageable);
-        return new UsersPage(
-                page,
-                userEntities.getSize(),
-                userEntities.getTotalPages(),
-                userEntities.stream()
-                        .map(this::fromEntity)
-                        .collect(Collectors.toList())
-                );
+    public PagedData getCustomers(int page, int size, List<SelectedField> selectedFields) {
+        return userRepository.getCustomers(page, size, selectedFields);
     }
 
     private User fromEntity(UserEntity entity){
         return User.builder()
-                .userId(entity.getExternalId())
+                .customerId(entity.getCustomerId())
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .email(entity.getEmail())
