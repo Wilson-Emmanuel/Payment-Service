@@ -2,9 +2,10 @@ package com.anymind.paymentservice.web.controllers;
 
 import com.anymind.paymentservice.services.PaymentService;
 import com.anymind.paymentservice.web.models.requests.PaymentInput;
-import com.anymind.paymentservice.web.models.responses.Payment;
-import graphql.schema.DataFetchingEnvironment;
+import com.anymind.paymentservice.web.models.responses.PagedData;
+import graphql.schema.DataFetchingFieldSelectionSet;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * Created by Wilson
@@ -29,13 +30,18 @@ public class PaymentController {
     PaymentService paymentService;
 
     @MutationMapping
-    public Payment makePayment(@Argument @Valid PaymentInput newPayment){
-        //df.getSelectionSet().getFields().forEach( selectedField -> System.out.println(selectedField.getName()));
-        return paymentService.makePayment(newPayment);
+    public Map<String, Object> makePayment(@Argument @Valid PaymentInput newPayment, DataFetchingFieldSelectionSet selectionSet){
+        return paymentService.makePayment(newPayment, selectionSet.getImmediateFields());
     }
 
     @QueryMapping
-    public List<Payment> getPayments(@Argument @Valid @NotBlank String startDateTime, @Argument @Valid @NotBlank String endDateTime){
-        return paymentService.getPayments(startDateTime, endDateTime);
+    public List<Map<String,Object>> getPayments(@Argument @Valid @NotBlank String startDateTime, @Argument @Valid @NotBlank String endDateTime, DataFetchingFieldSelectionSet set){
+        return paymentService.getPayments(startDateTime, endDateTime,set.getImmediateFields());
     }
+    @QueryMapping
+    public PagedData getPagedPayments(@Argument @Valid @Min(value = 0) int page, @Argument @Valid @Min(value = 1) int pageSize, DataFetchingFieldSelectionSet selectedSet){
+        return paymentService.getPagedPayments(page, pageSize, selectedSet.getFields("data").get(0).getSelectionSet().getImmediateFields());
+    }
+
+
 }

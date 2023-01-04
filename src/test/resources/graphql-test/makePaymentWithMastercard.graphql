@@ -14,9 +14,11 @@ mutation {
         points
         pointModifier
         datetime
-        paymentMethod
+        paymentMethod{
+            name
+        }
         customer{
-            userId
+            customerId
             firstName
             lastName
             email

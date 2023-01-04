@@ -16,8 +16,8 @@ import lombok.*;
 @Entity
 @Table(name = "users")
 public class UserEntity extends AbstractBaseEntity<Long>{
-    @Column(name = "external_id", unique = true, nullable = false)
-    private String externalId;
+    @Column(name = "customer_id", unique = true, nullable = false)
+    private String customerId;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

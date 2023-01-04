@@ -1,172 +1,197 @@
 
-##########################
-## QUERY PAYMENT METHOD
- query{
-   getPaymentMethod(methodName: "MASTERCARD"){
-     name
-         minPriceModifier
-         maxPriceModifier
-         pointModifier
-         requiresAdditionalItem
-   }
- }
+# ##########################
+# ## QUERY PAYMENT METHOD
+ # query{
+ #   getPaymentMethod(methodName: "MASTERCARD"){
+ #     name
+ #         minPriceModifier
+ #         maxPriceModifier
+ #         pointModifier
+ #         requiresAdditionalItem
+ #   }
+ # }
 
-#########################
- ## QUERY ALL PAYMENT METHODS
- query{
-   getPaymentMethods{
-     name
-         minPriceModifier
-         maxPriceModifier
-         pointModifier
-         requiresAdditionalItem
-   }
- }
+# #########################
+#  ## QUERY ALL PAYMENT METHODS
+ # query{
+ #   getPaymentMethods{
+ #     name
+ #         minPriceModifier
+ #         maxPriceModifier
+ #         pointModifier
+ #         requiresAdditionalItem
+ #   }
+ # }
 
 
-#########################
-##CREATE A PAYMENT METHOD
- mutation{
-     createPaymentMethod(newPaymentMethod: {
-         name: "UnionPay"
-         minPriceModifier: 0.95
-         maxPriceModifier: 1
-         pointModifier: 0.05
-       	requiresAdditionalItem:true
-     }){
-         name
-         minPriceModifier
-         maxPriceModifier
-         pointModifier
-         requiresAdditionalItem
-     }
- }
+# #########################
+# ##CREATE A PAYMENT METHOD
+ # mutation{
+ #     createPaymentMethod(newPaymentMethod: {
+ #         name: "UnionPay"
+ #         minPriceModifier: 0.95
+ #         maxPriceModifier: 1
+ #         pointModifier: 0.05
+ #       	requiresAdditionalItem:true
+ #     }){
+ #         name
+ #         minPriceModifier
+ #         maxPriceModifier
+ #         pointModifier
+ #         requiresAdditionalItem
+ #     }
+ # }
 
-#########################
-## UPDATE A PAYMENT METHOD
- mutation{
-     updatePaymentMethod(methodName: "MASTERCARD", updatedPaymentMethod: {
-         name: "MASTERCARD"
-         minPriceModifier: 0.87
-         maxPriceModifier: 1
-         pointModifier: 0.05
-       	requiresAdditionalItem:true
-     }){
-         name
-         minPriceModifier
-         maxPriceModifier
-         pointModifier
-         requiresAdditionalItem
-     }
- }
+# #########################
+# ## UPDATE A PAYMENT METHOD
+ # mutation{
+ #     updatePaymentMethod(methodName: "MASTERCARD", updatedPaymentMethod: {
+ #         name: "MASTERCARD"
+ #         minPriceModifier: 0.80
+ #         maxPriceModifier: 1
+ #         pointModifier: 0.05
+ #       	requiresAdditionalItem:true
+ #     }){
+ #         name
+ #         minPriceModifier
+ #         maxPriceModifier
+ #         pointModifier
+ #         requiresAdditionalItem
+ #     }
+ # }
 
-#########################
- # SUBMIT A PAYMENT
- mutation {
-   makePayment(newPayment: {
-     customerId: "12346"
-     price: "765.00"
-     priceModifier: 0.95
-     paymentMethod: "MASTERCARD"
-     datetime: "2022-12-28T00:00:00Z",
-     additionalItem: {
-       last4: "1234"
-     }
-   }){
-     finalPrice
-     priceModifier
-     points
-     pointModifier
-     datetime
-     paymentMethod
-     customer{
-       userId
-       firstName
-       lastName
-       email
-     }
-     additionalItem
-   }
- }
+# #########################
+#  # SUBMIT A PAYMENT
+ # mutation {
+ #   makePayment(newPayment: {
+ #     customerId: "12346"
+ #     price: "4777.00"
+ #     priceModifier: 0.96
+ #     paymentMethod: "VISA"
+ #     datetime: "2022-12-31T15:00:00Z",
+ #     additionalItem: {
+ #       last4: "1234"
+ #     }
+ #   }){
+ #     finalPrice
+ #     priceModifier
+ #     points
+ #     pointModifier
+ #     datetime
+ #     paymentMethod{
+ #      name
+ #    }
+ #     customer{
+ #       customerId
+ #       firstName
+ #       lastName
+ #       email
+ #     }
+ #     additionalItem
+ #   }
+ # }
 
-########################
-## QUERY PAYMENTS
-query{
-    getPayments(startDateTime:"2022-01-25T00:00:00Z", endDateTime: "2022-12-28T20:00:00Z")
-    {
-        finalPrice
-        price
-        priceModifier
-        points
-        pointModifier
-        datetime
-        paymentMethod
-        customer{
-            userId
-            firstName
-            lastName
-            email
-        }
-        additionalItem
-    }
-}
+# ########################
+# ## QUERY PAYMENTS
+# query{
+#     getPayments(startDateTime:"2022-01-25T00:00:00Z", endDateTime: "2023-12-28T20:00:00Z")
+#     {
+#     finalPrice
+#      priceModifier
+#      points
+#      additionalItem
+#      customer{
+#       firstName
+#       lastName
+#     }
+#       paymentMethod{
+#         name
+#       }
+#     }
+# }
 
-########################
-## CREATE CUSTOMER
- mutation{
-   createUser(newUser: {
-     userId: "182369"
-     firstName: "firstName1"
-     lastName: "lastName1"
-     email: "firstName1@mail.com"
-   }){
-     userId
-     firstName
-     lastName
-     email
-   }
- }
+# ####################
+### QUERY PAGED PAYMENTS
+ # query{
+ #   getPagedPayments(page:1, pageSize:3){
+ #     currentPage
+ #     pageSize
+ #     totalPages
+ #     data{
+ #       ...on Payment{
+ #        __typename
+ #         finalPrice
+ #         priceModifier
+ #         points
+ #         additionalItem
+ #         customer{
+ #          firstName
+ #          lastName
+ #         }
+ #        paymentMethod{
+ #            name
+ #        }
+ #      }
+ #     }
+ #   }
+ # }
 
-########################
-## QUERY CUSTOMER BY customerId
- query{
-   getCustomerById(customerId: "12378"){
-     userId
-     firstName
-     lastName
-     email
-   }
- }
+# ########################
+# ## CREATE USER: DEFAULT USER IS CUSTOMER
+ # mutation{
+ #   createUser(newUser: {
+ #     customerId: "12347"
+ #     firstName: "firstName1"
+ #     lastName: "lastName1"
+ #     email: "firstName1@mail.com"
+ #   }){
+ #     customerId
+ #     firstName
+ #     lastName
+ #     email
+ #   }
+ # }
 
-########################
-## QUERY CUSTOMERS WITH DEFAULT PAGE AND SIZE
- query{
-   getCustomers{
-     currentPage
-     pageSize
-     totalPages
-     users{
-       userId
-       firstName
-       lastName
-       email
-     }
-   }
- }
+# ########################
+# ## QUERY CUSTOMER BY customerId
+ # query{
+ #   getCustomerById(customerId: "12345"){
+ #     email
+ #    	lastName
+ #    customerId
+ #   }
+ # }
 
-########################
-## QUERY CUSTOMERS
- query{
-   getCustomers(page: 0, pageSize: 1){
-     currentPage
-     pageSize
-     totalPages
-     users{
-       userId
-       firstName
-       lastName
-       email
-     }
-   }
- }
+# ########################
+# ## QUERY CUSTOMERS WITH DEFAULT PAGE AND SIZE
+ # query{
+ #   getCustomers(page:0,pageSize:2){
+ #     currentPage
+ #     pageSize
+ #     totalPages
+ #     data{
+ #       ... on User{
+ #        firstName
+ #        lastName
+ #      }
+ #     }
+ #   }
+ # }
+
+# ########################
+# ## QUERY CUSTOMERS
+ # query{
+ #   getCustomers(page: 1, pageSize: 1){
+ #     currentPage
+ #     pageSize
+ #     totalPages
+ #     data{
+ #       ...on User{
+ #        firstName
+ #        lastName
+ #        email
+ #      }
+ #     }
+ #   }
+ # }
 

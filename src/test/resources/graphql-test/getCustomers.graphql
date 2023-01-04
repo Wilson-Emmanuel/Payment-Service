@@ -4,11 +4,13 @@
      currentPage
      pageSize
      totalPages
-     users{
-       userId
-       firstName
-       lastName
-       email
+     data {
+       ... on User{
+         customerId
+         firstName
+         lastName
+         email
+       }
      }
    }
  }

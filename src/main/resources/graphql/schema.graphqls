@@ -10,7 +10,8 @@ type Query {
     getPayments(startDateTime: String!, endDateTime: String!): [Payment!]
     getPaymentMethods: [PaymentMethod!]
     getPaymentMethod(methodName: String!): PaymentMethod
-    getCustomers(page: Int = 0, pageSize : Int = 20):UsersPage!
+    getCustomers(page: Int = 0, pageSize : Int = 20):Page!
+    getPagedPayments(page: Int=0, pageSize: Int = 20): Page!
     getCustomerById(customerId: String!): User
 }
 
@@ -32,14 +33,16 @@ input PaymentMethodInput {
     requiresAdditionalItem: Boolean
 }
 input UserInput {
-    userId: String!
+    customerId: String!
     firstName: String!
     lastName: String!
     email: String!
-    role: UserRole
+    role: UserRole = CUSTOMER
 }
 #####################################
 ## TYPES
+union PagedData = User | Payment
+
 type Payment {
     customer: User!
     priceModifier: Float!
@@ -47,7 +50,7 @@ type Payment {
     finalPrice: String!
     points: Int!
     pointModifier: Float!
-    paymentMethod: String!
+    paymentMethod: PaymentMethod!
     datetime: String!
     additionalItem: Object
 }
@@ -60,17 +63,18 @@ type PaymentMethod {
 }
 
 type User {
-    userId: String!
+    customerId: String!
     firstName: String!
     lastName: String!
     email: String!
 }
-type UsersPage {
+type Page {
     currentPage: Int!
     pageSize: Int!
     totalPages: Int!
-    users: [User!]
+    data: [PagedData!]
 }
 enum UserRole {
     CUSTOMER,ADMIN
 }
+

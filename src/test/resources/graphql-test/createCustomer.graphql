@@ -1,11 +1,11 @@
  mutation{
    createUser(newUser: {
-     userId: "182369"
+     customerId: "182369"
      firstName: "firstName1"
      lastName: "lastName1"
      email: "firstName1@mail.com"
    }){
-     userId
+     customerId
      firstName
      lastName
      email

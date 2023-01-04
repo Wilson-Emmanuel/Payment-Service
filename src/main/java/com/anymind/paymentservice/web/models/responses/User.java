@@ -1,6 +1,5 @@
 package com.anymind.paymentservice.web.models.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class User {
-    private String userId;
+    private String customerId;
 
     private String firstName;
     private String lastName;

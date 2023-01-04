@@ -2,8 +2,9 @@ package com.anymind.paymentservice.web.controllers;
 
 import com.anymind.paymentservice.services.UserService;
 import com.anymind.paymentservice.web.models.requests.UserInput;
+import com.anymind.paymentservice.web.models.responses.PagedData;
 import com.anymind.paymentservice.web.models.responses.User;
-import com.anymind.paymentservice.web.models.responses.UsersPage;
+import graphql.schema.DataFetchingFieldSelectionSet;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -14,6 +15,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+
+import java.util.Map;
 
 /**
  * Created by Wilson
@@ -32,12 +35,12 @@ public class UserController {
     }
 
     @QueryMapping
-    public User  getCustomerById(@Argument @Valid @NotBlank String customerId){
-        return userService.getUserByExternalId(customerId);
+    public Map<String,Object> getCustomerById(@Argument @Valid @NotBlank String customerId, DataFetchingFieldSelectionSet selectedSet){
+        return userService.getUserByCustomerId(customerId, selectedSet.getImmediateFields());
     }
 
     @QueryMapping
-    public UsersPage getCustomers(@Argument @Valid @Min(value = 0) int page, @Argument @Valid @Min(value = 1) int pageSize){
-        return userService.getCustomers(page, pageSize);
+    public PagedData getCustomers(@Argument @Valid @Min(value = 0) int page, @Argument @Valid @Min(value = 1) int pageSize, DataFetchingFieldSelectionSet selectedSet){
+        return userService.getCustomers(page, pageSize, selectedSet.getFields("data").get(0).getSelectionSet().getImmediateFields());
     }
 }
