@@ -85,7 +85,7 @@ Ensure you have latest `Docker` and `Git` installed and running on your system, 
 ```$ docker-compose up```
 
 
-Note: The above instruction is using an already built `jar` file to run the application. This should be enough since the file contains the latest changes made to the application. However, if you would want to re-build the application, skip from `step 2` and continue the steps below after cloning the project.
+Note: The above instruction is using an already built `jar` file to run the application. This should be enough since the jar file contains the latest changes made to the application. However, if you would want to re-build the application, skip from `step 2` and continue the steps below after cloning the project.
 
 2. `CD` into the project directory after cloning the project.
 
@@ -97,7 +97,7 @@ Note: The above instruction is using an already built `jar` file to run the appl
 
 Note: It is very necessary to include the `-DskipTests` in the command above since the test database is not yet running, else the build process would fail.
 
-4. Once the jar file is successfully built, copy it from the target folder where it's built into the docker folder. Be sure to use the `-f` option to force an overwrite over the file already existing in the destination folder.
+4. Once the jar file is successfully built, copy it from the target folder (where the built jar file is located) into the docker folder. Be sure to use the `-f` option to force an overwrite over the file already existing in the destination folder.
 
 ```$ cp -f target/payment-service-0.0.1-SNAPSHOT.jar docker/payment-service.jar```
 
