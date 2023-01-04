@@ -61,6 +61,14 @@ NB: Some changes are made to the request formats included in the problem stateme
 - MULTI-CONTAINER DEPLOYMENT: `docker compose` is used to orchestrate 4 application containers for this payment service (the payment service container, pgAdmin container, two postgres database containers including test database)
 - TESTING: Few integration tests has been written for this service and all tests passed.
 
+## Dynamic Queries
+GraphQL is very well known by its ability to solve the `Overfetching` and `Underfetching` problems that are common with `REST`. However, most implementations I have seen recently do not fully utilize the benefits that GraphQL offers.
+`Overfetching` and `Underfetching` are issues that could occur both in `Client-to-Server` network transmission as well as `Database requests`. It is common to see application fetch unnecessary data from the database 
+only for GraphQL processing server application to ignore some of the database response data while constructing the client response data. This can negatively affect the performances of the backend service.
+
+To solve this problem, database request/queries should be made dynamic in order to fetch only necessary data, enough to serve a request based on the selected fields in the GraphQL request payload.
+I tried to explore several data fetching options available in spring data, including [JPA queries using Entity Projections](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/src/main/java/com/anymind/paymentservice/persistence/repositories/projections/PaymentProjection.java) and [QueryDSL (which can be directly injected into GraphQL DataFetchers)](https://github.com/Wilson-Emmanuel/Payment-Service/blob/master/src/main/java/com/anymind/paymentservice/web/configs/GraphQlConfig.java) but I did not seem to achieve the result of dynamically fetching only necessary data from the database.
+This is why I came up with a [custom implementation that uses the fields in the GraphQL request payload to issue dynamic queries to the database](https://github.com/Wilson-Emmanuel/Payment-Service/tree/master/src/main/java/com/anymind/paymentservice/persistence/dynamic_field_selectors). This way only necessary data are fetched from the database, thus, enhancing the performance of the application.
 
 ## Run Instructions
 Ensure you have latest `Docker` and `Git` installed and running on your system, after which, follow the instructions below to get the system up and running.
